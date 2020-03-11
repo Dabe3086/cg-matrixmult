@@ -12,9 +12,12 @@ function CalculateCompoundTransform(transforms) {
 
     compound_transform = new Matrix(4, 4); // change / remove this
     compound_transform = transforms[0].mat4x4;
-    for(var i = 1; i < transforms.length - 1; i++)
+    if(transforms.length() > 1)
     {
-        compound_transform = Matrix.multiply(compound_transform, transforms[i].mat4x4);
+        for(var i = 1; i < transforms.length - 1; i++)
+        {
+            compound_transform = Matrix.multiply(compound_transform, transforms[i].mat4x4);
+        }
     }
 
     return compound_transform;
@@ -25,6 +28,7 @@ function CalculateTransformedVertex(vertex) {
     // multiple vertex by compound_transform
     // `final_vertex = Matrix.multiply(...)`
     var final_vertex = new Vector(4); // change / remove this
+    final_vertex = Matrix.multiply(compound_transform, vertex);
 
     return final_vertex;
 }
