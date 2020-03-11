@@ -11,6 +11,11 @@ function CalculateCompoundTransform(transforms) {
     var tranform_matrices = [];
 
     compound_transform = new Matrix(4, 4); // change / remove this
+    compound_transform = transforms[0].mat4x4;
+    for(int i = 1; i < transforms.length - 1; i++)
+    {
+        compound_transform = Matrix.multiply(compound_transform, transforms[i].mat4x4);
+    }
 
     return compound_transform;
 }
