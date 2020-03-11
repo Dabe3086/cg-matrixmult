@@ -17,7 +17,7 @@ function CalculateCompoundTransform(transforms) {
     }
     else
     {
-        for(var i = 0; i < transforms.length; i++)
+        for(var i = transforms.length - 1; i >= 0; i--)
         {
             transform_matrices[i] = transforms[i].mat4x4;
         }
