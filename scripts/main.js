@@ -8,18 +8,21 @@ function CalculateCompoundTransform(transforms) {
     // if only one transform, set compound transform eequal to it
     // otherwise multiply all matrices together (in proper order)
     // `compound_transform = Matrix.multiply(...)`
-    var tranform_matrices = [];
+    var transform_matrices = [];
 
     compound_transform = new Matrix(4, 4); // change / remove this
-    compound_transform = transforms[0].mat4x4;
-    if(transforms.length() > 1)
+    if(transforms.length == 1)
     {
-        for(var i = 1; i < transforms.length - 1; i++)
-        {
-            compound_transform = Matrix.multiply(compound_transform, transforms[i].mat4x4);
-        }
+        compound_transform = transforms[0].mat4x4;
     }
-
+    else
+    {
+        for(var i = 0; i < transforms.length; i++)
+        {
+            transform_matrices[i] = transforms[i].mat4x4;
+        }
+        compound_transform = Matrix.multiply(transform_matrices);
+    }
     return compound_transform;
 }
 
@@ -28,8 +31,7 @@ function CalculateTransformedVertex(vertex) {
     // multiple vertex by compound_transform
     // `final_vertex = Matrix.multiply(...)`
     var final_vertex = new Vector(4); // change / remove this
-    final_vertex = Matrix.multiply(compound_transform, vertex);
-
+    final_vertex = Matrix.multiply([compound_transform, vertex]);
     return final_vertex;
 }
 
@@ -37,7 +39,30 @@ function CalculateTransformedVertex(vertex) {
 function ChangeTransform(index, type, values) {
     app.transforms[index].type = type;
     // update `app.transforms[index].mat4x4`
-
+    if(type == "translate")
+    {
+        Mat4x4Translate(app.transforms[index].mat4x4, values[0], values[1], values[2]);
+    }
+    else if(type == "scale")
+    {
+        Mat4x4Scale(app.transforms[index].mat4x4, values[0], values[1], values[2]);
+    }
+    else if(type == "rotate_x")
+    {
+        Mat4x4RotateX(app.transforms[index].mat4x4, values[0]);
+    }
+    else if(type == "rotate_y")
+    {
+        Mat4x4RotateY(app.transforms[index].mat4x4, values[0]);
+    }
+    else if(type == "rotate_z")
+    {
+        Mat4x4RotateZ(app.transforms[index].mat4x4, values[0]);
+    }
+    else if(type == "shearXY")
+    {
+        Mat4x4ShearXY(app.transforms[index].mat4x4, values[0], values[1]);
+    }
     // recalculate compound transform and tranformed vertex
     app.compound = CalculateCompoundTransform(app.transforms);
     app.final_vertex = CalculateTransformedVertex(app.vertex);
